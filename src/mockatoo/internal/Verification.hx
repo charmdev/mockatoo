@@ -6,7 +6,7 @@ import mockatoo.Mockatoo;
 	Dynamic class that is created for verification.
 	Each dynamic method calls to a specific MockMethod.
 */
-class Verification implements Dynamic<Dynamic>
+class Verification
 {
 	public var mode:VerificationMode;
 

@@ -41,7 +41,6 @@ class ComplexTypes
 			{
 				case TPath(p):
 				{
-					Console.log(p);
 					if (p.pack.length != 0) return EConst(CIdent("null")).at();
 
 					if (p.name == "StdTypes") p.name = p.sub;

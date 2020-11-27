@@ -60,8 +60,6 @@ class MockMaker
 
 		id = e.toString();
 
-		Console.log(id);
-
 		this.isSpy = isSpy;
 
 		pos = e.pos;
@@ -83,12 +81,8 @@ class MockMaker
 			}
 		}
 		
-		Console.log(type);
 		actualType = type.follow();
 		
-		Console.log(type);
-		Console.log(actualType);
-
 		params = [];
 
 		if (paramTypes != null && isNotNull(paramTypes))
@@ -100,7 +94,6 @@ class MockMaker
 					for (value in values)
 					{
 						var ident = value.toString();
-						Console.log("  param: " + ident);
 						params.push(Context.getType(ident));
 					}
 
@@ -143,7 +136,6 @@ class MockMaker
 				}
 				catch(e:Dynamic)
 				{
-					Console.log(type);
 				}
 			}
 
@@ -153,7 +145,6 @@ class MockMaker
 			generatedExpr = ENew(typePath, [eIsSpy]).at(pos);
 		}
 
-		Console.log(generatedExpr.toString());
 		return generatedExpr;	
 	}
 
@@ -173,7 +164,6 @@ class MockMaker
 
 		for (field in fields)
 		{
-			Console.log(field.name);
 			arg = {field:field.name, expr:null};
 
 		
@@ -225,11 +215,7 @@ class MockMaker
 	*/
 	function createMockFromClass()
 	{
-		Console.log("expr: " + expr);
-		Console.log("id: " + id);
-		Console.log("type: " + type);
-		Console.log("actual: " + actualType);
-		
+	
 		switch (actualType)
 		{
 			case TInst(t, typeParams):
@@ -244,7 +230,6 @@ class MockMaker
 		if (mockedClassMap.exists(id))
 		{
 			typeDefinitionId = mockedClassMap.get(id);
-			Console.log("existing: " + id + ", " + typeDefinitionId);
 			return;
 		}
 
@@ -252,14 +237,6 @@ class MockMaker
 
 		if (isInterface) isSpy = false;
 		
-		Console.log("params: " + params);
-		Console.log("isSpy " +  isSpy);
-		Console.log("class " +  classType.name);
-		Console.log("   interface: " + isInterface);
-		Console.log("   params: " + classType.params);
-		Console.log("   pos: " + classType.pos);
-		Console.log("   module: " + classType.module);
-
 		typeDefinition = createTypeDefinition();
 		typeDefinitionId = (typeDefinition.pack.length > 0 ? typeDefinition.pack.join(".")  + "." : "") + typeDefinition.name;
 
@@ -295,8 +272,6 @@ class MockMaker
 		propertyMetas = [];
 		var paramTypes:Array<TypeParamDecl> = [];
 
-		Console.log("classType.params:" + classType.params);
-		
 		for (i in 0...classType.params.length)
 		{
 			var param = classType.params[i];
@@ -325,24 +300,16 @@ class MockMaker
 
 		var extendId = classType.module + "." + classType.name;
 
-		Console.log("paramTypes:" + paramTypes);
-		Console.log("super params:" + classType.params);
-
 		var typeParams:Array<TypeParam> = [];
 		for (p in classType.params)
 		{
 			typeParams.push(TPType(haxe.macro.TypeTools.toComplexType(p.t)));
 		}
 
-		Console.log(typeParams);
 
 		typeParams = removeTypedConsraintsFromTypeParams(typeParams);
-
-		Console.log(typeParams);
-
 		extendTypePath = extendId.toTypePath(typeParams);
 
-		Console.log(extendTypePath);
 
 		var kind = createKind();
 
@@ -440,7 +407,6 @@ class MockMaker
 	{
 		var printer = new haxe.macro.Printer();
 		var result = printer.printTypeDefinition(typeDefinition);
-		Console.log(result);
 	}
 
 	function updateMeta(source:Metadata):Metadata
@@ -449,7 +415,6 @@ class MockMaker
 
 		for (meta in source)
 		{
-			Console.log(meta.name + ":" + new Printer().printExprs(meta.params, ""));
 
 			switch (meta.name)
 			{
@@ -481,7 +446,6 @@ class MockMaker
 		}
 		else
 		{
-			Console.log(extendTypePath);
 			extension = extendTypePath;
 			interfaces = [mockInterface];
 		}
@@ -541,7 +505,7 @@ class MockMaker
 				{
 					#if no_inline
 						fields.push(field);
-					#elseif !ignore_inline
+					#else
 						Context.warning("Cannot mock inline method [" + id + "." + field.name + "]. Please set '--no-inline' compiler flag.", Context.currentPos());
 					#end
 
@@ -730,7 +694,6 @@ class MockMaker
 
 			for (arg in f.args)
 			{
-				Console.log(arg);
 				var argExpr = arg.type.getDefaultValue();
 				args.push(argExpr);
 			}
@@ -795,8 +758,6 @@ class MockMaker
 			if(f.ret != null)
 				f.ret = normaliseComplexType(f.ret);
 
-			Console.log(field.name + ":" + Std.string(f.ret));
-		
 			var eDefaultReturnValue = f.ret.getDefaultValue(); //default return type (usually 'null')
 
 			var eSuper =  ("super." + field.name).toFieldExpr().call(args);
@@ -873,8 +834,6 @@ class MockMaker
 		for (arg in f.args)
 		{
 			if (!arg.opt) continue;
-
-			Console.log(arg.name + ":" + arg.type.toString());
 		}
 	}
 
@@ -999,7 +958,6 @@ class MockMaker
 
 			if (baseType != null && baseType.name == typePath.sub && baseType.isPrivate)
 			{
-				Console.log("! " + Std.string(type));
 				return type.toLazyComplexType();
 			}
 		}
@@ -1026,8 +984,6 @@ class MockMaker
 
 		for (functionArg in f.args)
 		{
-			Console.log(functionArg);
-
 			var value = functionArg.opt ? "?" : "";
 
 			if (functionArg.type != null)

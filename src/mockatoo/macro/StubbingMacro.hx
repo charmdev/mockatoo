@@ -19,8 +19,6 @@ class StubbingMacro
 	public static function createWhen(expr:Expr):Expr
 	{
 		var str = expr.toString();
-		Console.log(str);
-		Console.log(expr);
 
 		//converts instance.one(1)
 		//into instance.mockProxy.when("one", [1])
@@ -126,7 +124,6 @@ class StubbingMacro
 		exprs.push(actualExpr);
 
 		var ret = EBlock(exprs).at();
-		Console.log(ret.toString());
 
 		return ret;
 	}

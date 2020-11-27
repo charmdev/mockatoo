@@ -24,20 +24,6 @@ class InitMacro
 		initialized = true;
 
 		Compiler.define("no-inline");
-
-		Console.removePrinter(Console.defaultPrinter);
-
-		#if MOCKATOO_LOG
-		
-		createTempDirectory();
-
-		Console.addPrinter(new FilePrinter(TEMP_DIR + "mockatoo.log"));
-
-		Console.start();
-
-		#else
-		Console.stop();
-		#end
 	}
 
 	static function createTempDirectory()
@@ -60,23 +46,5 @@ class InitMacro
 	}
 }
 
-class FilePrinter extends mconsole.FilePrinter
-{
-	public function new(path:String)
-	{
-		if (FileSystem.exists(path))
-			FileSystem.deleteFile(path);
-		super(path);
-	}
-
-	/**
-		Fiters out any logs outside of current package.
-	*/
-	override public function print(level: mconsole.LogLevel, params:Array<Dynamic>, indent:Int, pos:haxe.PosInfos):Void
-	{
-		if (StringTools.startsWith(pos.className, "mockatoo"))
-			super.print(level, params, indent, pos);
-	}
-}
 
 #end

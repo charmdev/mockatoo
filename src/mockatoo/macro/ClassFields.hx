@@ -43,8 +43,6 @@ class ClassFields
 		if (paramTypes == null) paramTypes = [];
 		if (fieldMap == null) fieldMap = new StringMap();
 
-		Console.log(c.name + ":" + paramTypes);
-
 		var paramMap = getClassTypeDeclarationMap(c, paramTypes);
 		
 		// recurse through super classes (or interfaces if an interface)
@@ -59,7 +57,6 @@ class ClassFields
 		{
 			var superParams = mapTypes( type.params, paramMap);
 
-			Console.log("     superParams: " + superParams);
 			var superFields = getClassFields(type.t.get(), includeStatics, superParams, fieldMap);
 
 			for (field in superFields)
@@ -358,6 +355,7 @@ class ClassFields
 			case AccResolve: throw "not implemented for VarAccess [" + access + "]";
 			case AccCall: "property";
 			case AccRequire(_,_): throw "not implemented VarAccess [" + access + "]";
+			case AccCtor: throw "not implemented";
 		}		
 	}
 
